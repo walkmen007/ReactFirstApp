@@ -1,28 +1,30 @@
 import {ticketList as tktList}  from "../../../constants/ticketList";
 import Image from 'next/image'
-function TicketList(){
-  function handleTicketClick(param, clickType){
-    switch(clickType){
-      case 'name':
-      redirectTo(id, clickType);
-      break;
+import axios from 'axios';
+import { useRouter } from 'next/router';
+const TicketList=  ()=>{
+  const router = useRouter();
 
-      case 'lastLoc':
-      redirectTo(id, clickType);
-      break;
-
-      case 'firstSeen': 
-      redirectTo(id, clickType);
-      break;
+    function fetchData(id, c){
+      axios.get('https://jsonplaceholder.typicode.com/posts').then(res=>{
+        console.log("resp", res);
+        }).catch((err)=>{
+        console.log("Err");
+      })
     }
-    console.log("Param---", param);
-  }
 
-  function redirectTo(){
-
-  }
+    const handleTicketClick = (param, clickType)=>{
+      console.log("param---", param, clickType);
+      router.push({pathname : '/ticket/' + clickType,
+      query:{
+        id: param.id,
+        name:clickType
+      }
+    });
+     // console.log("Param---", param);
+    }
   
-  const ticketHtml = tktList.map((item, index)=>(
+    const ticketHtml = tktList.map((item, index)=>(
     <div key={item.id} className="ticket">
       <div className="tkt-img">
                 <Image src={item.imgUrl} alt="Pic" width={200} height={200}/>
@@ -43,6 +45,8 @@ function TicketList(){
       </div>
     </div>
   ))
+
+
     return (
         <main>
         <div className="ticket-container">
